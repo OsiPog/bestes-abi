@@ -9,9 +9,12 @@
                 "https://derabirechner.de/*"
             ],
             "js": [
-                "js/main.js",
-                "js/url_parameter_handler.js"
+                "js/main.js"
             ]
         }
+    ],
+
+    "permissions": [
+        "storage"
     ]
 }
