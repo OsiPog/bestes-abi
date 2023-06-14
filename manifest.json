@@ -1,0 +1,17 @@
+{
+    "manifest_version": 2,
+    "name": "bestes.abi",
+    "version": "0.0.1",
+    
+    "content_scripts": [
+        {
+            "matches": [
+                "https://derabirechner.de/*"
+            ],
+            "js": [
+                "js/main.js",
+                "js/url_parameter_handler.js"
+            ]
+        }
+    ]
+}
