@@ -1,3 +1,19 @@
+// ==UserScript==
+// @name         bestes-abi
+// @namespace    https://derabirechner.de/
+// @version      0.1
+// @description  Import grades from beste.schule to derabirechner.de
+// @author       Osi Bluber
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=derabirechner.de
+// ==/UserScript==
+
+// This userscript is not in direct contact to Schulverwalter (the creators of beste.schule) 
+// nor to Leon Laurin Wehrhahn Handel und Vertrieb (the creators of derabirechner.de) thus 
+// it's not official in any way.
+
+(function() {
+    'use strict';
+
 const SUBJECT_NAMES = {
     "DE": "Deutsch",
     "EN": "1. Fremdsprache",
@@ -51,7 +67,7 @@ const editSubject = (div, subject) => {
 const insertGrades = (averages, subjects) => {
     // All subject rows
     let divs_subject = document.querySelectorAll("fieldset[name=test]>div.mb-2")
-    
+
     // if there are not enough subject rows add more with a virtual click on the button
     if (divs_subject.length < Object.keys(averages[0]).length) {
         const button = document.querySelector("button.btn.btn-primary.btn-sm.justify-self-start.mt-5")
@@ -162,3 +178,4 @@ try {
 catch (e) {
     alert("Beim Importieren der Noten ist ein Fehler aufgetreten: " + e)
 }
+})();
