@@ -22,7 +22,7 @@ const SUBJECT_NAMES = {
     "ETH": "Religion",
     "PHI": "Philosophie"
 }
-const CLICK_EVENT = new MouseEvent("click")
+const CLICK_EVENT = new MouseEvent("click", {view: window, bubbles: true, cancelable: false})
 
 
 // subject: {local_id, grades: []}
@@ -145,7 +145,7 @@ try {
         let json_string;
 
         if (window.location.href.includes("?import=")) {
-            let [new_href, json_string] = decodeURI(window.location.href).split("?import=")
+            [new_href, json_string] = decodeURI(window.location.href).split("?import=")
             localStorage["bestes-abi"] = json_string
             window.location.href = new_href
         }
