@@ -22,7 +22,11 @@ const SUBJECT_NAMES = {
     "ETH": "Religion",
     "PHI": "Philosophie"
 }
-const CLICK_EVENT = new MouseEvent("click", {view: window, bubbles: true, cancelable: false})
+const CLICK = new MouseEvent("click", { bubbles: true, cancelable: false })
+let initiated = false
+let prev_href = window.location.href
+let averages
+let subjects
 
 
 // subject: {local_id, grades: []}
@@ -33,80 +37,73 @@ const editSubject = (div, subject) => {
 
     const inputs_grade = div.querySelectorAll("input[type=number]")
 
-    const updateInputs = (ignore_input=null) => {
-        inputs_grade.forEach((input, i) => {
-            if (ignore_input === input) return
-            if (subject.grades[i]) input.value = subject.grades[i]
-            if (ignore_input === null) { // first runtime
-                input.addEventListener("change", ()=>updateInputs(input))
-                input.addEventListener("click", ()=>updateInputs())
-            }
-        });
-    }
-
-    updateInputs()
+    inputs_grade.forEach((input, i) => {
+        if (subject.grades[i] && (input.value === "")) {
+            input.value = subject.grades[i] 
+        }
+    });
 
 }
 
-const insertGrades = (averages, subjects) => {
+const insertGrades = () => {
     // All subject rows
     let divs_subject = document.querySelectorAll("fieldset[name=test]>div.mb-2")
-    
-    // if there are not enough subject rows add more with a virtual click on the button
-    if (divs_subject.length < Object.keys(averages[0]).length) {
-        const button = document.querySelector("button.btn.btn-primary.btn-sm.justify-self-start.mt-5")
-
-        for (let i=0;i<Object.keys(averages[0]).length-divs_subject.length;i++) {
-            button.dispatchEvent(CLICK_EVENT)
-        }
-        divs_subject = document.querySelectorAll("fieldset[name=test]>div.mb-2")
-    }
 
     const ignore_subjects = []
 
     // set 1st advanced course
-    editSubject(divs_subject[0], {local_id: subjects.lk1, grades: [
-        averages[0][subjects.lk1],
-        averages[1][subjects.lk1],
-        averages[2][subjects.lk1],
-        averages[3][subjects.lk1]
-    ]})
+    editSubject(divs_subject[0], {
+        local_id: subjects.lk1, grades: [
+            averages[0][subjects.lk1],
+            averages[1][subjects.lk1],
+            averages[2][subjects.lk1],
+            averages[3][subjects.lk1]
+        ]
+    })
     ignore_subjects.push(subjects.lk1)
 
     // set 2nd advanced course
-    editSubject(divs_subject[1], {local_id: subjects.lk2, grades: [
-        averages[0][subjects.lk2],
-        averages[1][subjects.lk2],
-        averages[2][subjects.lk2],
-        averages[3][subjects.lk2]
-    ]})
+    editSubject(divs_subject[1], {
+        local_id: subjects.lk2, grades: [
+            averages[0][subjects.lk2],
+            averages[1][subjects.lk2],
+            averages[2][subjects.lk2],
+            averages[3][subjects.lk2]
+        ]
+    })
     ignore_subjects.push(subjects.lk2)
 
     // set 3rd exam
-    editSubject(divs_subject[2], {local_id: subjects.p3, grades: [
-        averages[0][subjects.p3],
-        averages[1][subjects.p3],
-        averages[2][subjects.p3],
-        averages[3][subjects.p3]
-    ]})
+    editSubject(divs_subject[2], {
+        local_id: subjects.p3, grades: [
+            averages[0][subjects.p3],
+            averages[1][subjects.p3],
+            averages[2][subjects.p3],
+            averages[3][subjects.p3]
+        ]
+    })
     ignore_subjects.push(subjects.p3)
 
     // set 4th exam
-    editSubject(divs_subject[3], {local_id: subjects.p4, grades: [
-        averages[0][subjects.p4],
-        averages[1][subjects.p4],
-        averages[2][subjects.p4],
-        averages[3][subjects.p4]
-    ]})
+    editSubject(divs_subject[3], {
+        local_id: subjects.p4, grades: [
+            averages[0][subjects.p4],
+            averages[1][subjects.p4],
+            averages[2][subjects.p4],
+            averages[3][subjects.p4]
+        ]
+    })
     ignore_subjects.push(subjects.p4)
 
     // set 5th exam
-    editSubject(divs_subject[4], {local_id: subjects.p5, grades: [
-        averages[0][subjects.p5],
-        averages[1][subjects.p5],
-        averages[2][subjects.p5],
-        averages[3][subjects.p5]
-    ]})
+    editSubject(divs_subject[4], {
+        local_id: subjects.p5, grades: [
+            averages[0][subjects.p5],
+            averages[1][subjects.p5],
+            averages[2][subjects.p5],
+            averages[3][subjects.p5]
+        ]
+    })
     ignore_subjects.push(subjects.p5)
 
     const rest_subjects = []
@@ -116,49 +113,105 @@ const insertGrades = (averages, subjects) => {
             rest_subjects.push(local_id)
     }
 
-    setTimeout(() => {
-        rest_subjects.forEach((local_id, i) => {
-            editSubject(divs_subject[i+5], {local_id, grades: [
+    rest_subjects.forEach((local_id, i) => {
+        editSubject(divs_subject[i + 5], {
+            local_id, grades: [
                 averages[0][local_id],
                 averages[1][local_id],
                 averages[2][local_id],
                 averages[3][local_id],
-            ]})
+            ]
         })
-    }, 10)
+    })
 }
 
-// Create an import button
-const row = document.querySelector("div.flex.justify-self-start.items-center")
-const cbutton_container = row.cloneNode(false)
-row.after(cbutton_container)
-cbutton_container.innerHTML = `
-<a
-    href="https://osipog.github.io/bester-durchschnitt-app?export=derabirechner"
-    style="border-radius: 0.3rem !important;border-style:none;background-color:#1a68c6;color:white;padding: 0.4rem 0.5rem 0.4rem 0.5rem;margin-top:0.6rem"
->Import von bester.durchschnitt</a>
-`
 
-try {
-    if (window.location.href.includes("?import=") || localStorage["bestes-abi"]) {
-        // Get the object from the url params
-        let json_string;
+const init = () => {
+    if (initiated) {
+        insertGrades();
+        return
+    }
 
-        if (window.location.href.includes("?import=")) {
-            [new_href, json_string] = decodeURI(window.location.href).split("?import=")
-            localStorage["bestes-abi"] = json_string
-            window.location.href = new_href
+    // Create an import button
+    const row = document.querySelector("div.flex.justify-self-start.items-center")
+    if (!row) {
+        initiated = false
+        return
+    }
+
+    const container = row.cloneNode(false)
+    container.className += " my-2"
+    row.after(container)
+
+    const tooltip = document.querySelector("div.tooltip.tooltip-right")
+    const ctooltip = tooltip.cloneNode(true)
+    container.appendChild(ctooltip)
+    ctooltip.setAttribute("data-tip", 'Damit kannst du deine Endnoten von beste.schule importieren (über den Durchschnittsberechner bester.durchschnitt). Mit "Importiertes löschen" kannst du die importierten Noten wieder aus dem Speicher löschen.')
+
+    const cbutton = document.createElement("button")
+    container.appendChild(cbutton)
+    cbutton.className = "btn btn-sm btn-primary"
+    cbutton.innerText = "Importieren von bester.durchschnitt"
+    if (localStorage["bestes-abi"]) cbutton.setAttribute("disabled", "")
+    cbutton.addEventListener("click", () => {
+        window.location.href = "https://osipog.github.io/bester-durchschnitt-app?export=derabirechner"
+    })
+
+    const cdelete = document.createElement("button")
+    container.appendChild(cdelete)
+    cdelete.className = "btn btn-sm btn-outline btn-secondary mx-2"
+    cdelete.innerText = "Importiertes löschen"
+    if (!localStorage["bestes-abi"]) cdelete.setAttribute("disabled", "")
+    cdelete.addEventListener("click", () => {
+        delete localStorage["bestes-abi"]
+        window.location.reload()
+    })
+
+    try {
+        if (window.location.href.includes("?import=") || localStorage["bestes-abi"]) {
+            // Get the object from the url params
+            let json_string;
+
+            if (window.location.href.includes("?import=")) {
+                [new_href, json_string] = decodeURI(window.location.href).split("?import=")
+                localStorage["bestes-abi"] = json_string
+                window.location.href = new_href
+            }
+            else if (localStorage["bestes-abi"]) {
+                json_string = localStorage["bestes-abi"]
+            }
+
+            [averages, subjects] = JSON.parse(json_string)
+
+            // All subject rows
+            let divs_subject = document.querySelectorAll("fieldset[name=test]>div.mb-2")
+            initiating = true
+
+            // if there are not enough subject rows add more with a virtual click on the button
+            if (divs_subject.length < Object.keys(averages[0]).length) {
+                const button = document.querySelector("button.btn.btn-primary.btn-sm.justify-self-start.mt-5")
+
+                for (let i = 0; i < Object.keys(averages[0]).length - divs_subject.length; i++) {
+                    button.dispatchEvent(CLICK)
+                }
+            }
+            initiated = true
+            setTimeout(() => {
+                insertGrades()
+                document.addEventListener("click", init)
+            }, 10)
         }
-        else if (localStorage["bestes-abi"]) {
-            json_string = localStorage["bestes-abi"]
-        }
-
-        const [averages, subjects] = JSON.parse(json_string)
-        insertGrades(averages, subjects)
-
-        document.body.addEventListener("click", () => insertGrades(averages, subjects))
+    }
+    catch (e) {
+        alert("Beim Importieren der Noten ist ein Fehler aufgetreten: " + e)
     }
 }
-catch (e) {
-    alert("Beim Importieren der Noten ist ein Fehler aufgetreten: " + e)
-}
+
+setInterval(() => {
+    if (window.location.href !== prev_href) {
+        prev_href = window.location.href
+        init()
+    }
+}, 300)
+
+init()
