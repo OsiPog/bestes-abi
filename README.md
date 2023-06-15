@@ -4,5 +4,3 @@
 A Firefox addon/Userscript to import grades from https://beste.schule to https://derabirechner.de (using https://osipog.github.io/bester-durchschnitt-app to calculate the average grades)
 
 The Userscript for Tampermonkey (or else) can be found here: https://github.com/OsiPog/bestes-abi/blob/userscript/userscript.js
-
-The code is terrible but it should at least work.
