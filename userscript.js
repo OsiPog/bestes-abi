@@ -3,6 +3,7 @@
 // @namespace    https://derabirechner.de/
 // @version      0.1
 // @description  Import grades from beste.schule to derabirechner.de
+// @match        https://derabirechner.de/*
 // @author       Osi Bluber
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=derabirechner.de
 // ==/UserScript==
