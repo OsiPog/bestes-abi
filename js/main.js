@@ -173,7 +173,7 @@ const init = () => {
             let json_string;
 
             if (window.location.href.includes("?import=")) {
-                [new_href, json_string] = decodeURI(window.location.href).split("?import=")
+                let [new_href, json_string] = decodeURI(window.location.href).split("?import=")
                 localStorage["bestes-abi"] = json_string
                 window.location.href = new_href
             }
@@ -185,7 +185,6 @@ const init = () => {
 
             // All subject rows
             let divs_subject = document.querySelectorAll("fieldset[name=test]>div.mb-2")
-            initiating = true
 
             // if there are not enough subject rows add more with a virtual click on the button
             if (divs_subject.length < Object.keys(averages[0]).length) {
